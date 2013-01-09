@@ -4,7 +4,6 @@
 import re
 import urllib
 import urllib2
-import web
 def getscore_page(num=0):
     param = urllib.urlencode({'post_xuehao':num})
     page = urllib2.urlopen(
@@ -20,11 +19,16 @@ def calc_score(num=0):
     td = patten.findall(page)
     ret={}
     try:
-        ret["id"] = td[0]      #学号
-        ret["name"] = td[1]	
+        ret["id"] = td[0]       #学号
+        ret["name"] = td[1]	    #姓名
+        ret["sex"] = td[2]      #性别
+        ret["year"] = td[3]		#年级
         ret["collage"] = td[4]	#学院
         ret["major"] = td[5]	#专业
         ret["Class"] = td[6]	#班级
+        ret["level"] = td[8]    #层次
+        ret["stu_len"] = td[9]  #学制
+        ret["foreign"] = td[11] #外语
     except:
         print "cannot get info"
         return 0
@@ -66,12 +70,12 @@ def calc_score(num=0):
         score.append(td[i+10].replace(' ',''))
         score2.append(td[i+11].replace(' ',''))
         i+=16
-    ret['type']=type
-    ret['course']=course
-    ret['credits']=credits
-    ret['second']=second
-    ret['score']=score
-    ret['score2']=score2
+    ret['type']=type            #类别
+    ret['course']=course        #课程名称
+    ret['credits']=credits      #学分
+    ret['second']=second        #第二专业
+    ret['score']=score          #成绩
+    ret['score2']=score2        #补考成绩
     not_accept=[]       #没有通过
     totle_credits = 0   #总学分
     totle_score = 0     #总成绩
@@ -96,7 +100,7 @@ def calc_score(num=0):
                 float(score[i])    #判断成绩是不是数字
             except:
                 print score[i]
-                raw_input()
+ #               raw_input()
 
         try:
             s2 = sc_dict[score2[i]]
@@ -105,7 +109,7 @@ def calc_score(num=0):
                 float(score2[i])
             except:
                 print score2[i]
-                raw_input()
+#                raw_input()
 
         totle_credits+=float(credits[i]) #总学分
         if s == -1:     #百分制成绩
@@ -142,12 +146,11 @@ def calc_score(num=0):
     if totle_credits==0: #总学分为0
         ave_score = 0
     else:
-    
         ave_score = totle_score/totle_credits   #计算平均学分基点
-    ret['ave_score']=ave_score
-    ret['totle_score']=totle_score
-    ret['totle_credits']=totle_credits
-    ret['not_accept']=not_accept
+    ret['ave_score']=ave_score          #平均学分基点
+    ret['totle_score']=totle_score      #总成绩
+    ret['totle_credits']=totle_credits  #总学分
+    ret['not_accept']=not_accept        #至今未通过科目
     return ret
 
 
