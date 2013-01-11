@@ -24,7 +24,6 @@ class GPA:
             ).read()
         return page
 
-
     def __match_table(self):
         '''正则表达式获取完整表格'''
         page = self.__getscore_page()
